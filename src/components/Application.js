@@ -29,8 +29,8 @@ export default function Application(props) {
         <nav>
           <DayList
             days={days}
-            day={"Monday"}
-            setDay={(day) => console.log(day)}
+            value={"Monday"}
+            onChange={(day) => console.log(day)}
           />
         </nav>
         {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
