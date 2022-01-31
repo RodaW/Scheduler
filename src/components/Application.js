@@ -3,7 +3,7 @@ import axios from "axios";
 import DayList from "components/DayList";
 import "components/Application.scss";
 import Appointment from "components/Appointment/index.js";
-import { getAppointmentsForDay } from "../helpers/selectors"
+import { getAppointmentsForDay, getInterview } from "../helpers/selectors";
 // const appointments = [
 //   {
 //     id: 1,
@@ -47,13 +47,13 @@ export default function Application(props) {
     day: "Monday",
     days: [],
     appointments: {},
+    interviewers: {},
   });
   const [dailyAppointments, setDailyAppointments] = useState([]);
   useEffect(() => {
     setDailyAppointments((prev) => getAppointmentsForDay(state, state.day));
-  }, [state.day])
+  }, [state.day]);
   useEffect(() => {
-
     Promise.all([
       axios.get("/api/days"),
       axios.get("/api/appointments"),
@@ -65,7 +65,6 @@ export default function Application(props) {
         appointments: all[1].data,
         interviewers: all[2].data,
       }));
-
     });
   }, []);
   return (
@@ -77,11 +76,13 @@ export default function Application(props) {
           alt="Interview Scheduler"
         />
         <hr className="sidebar__separator sidebar--centered" />
-        <nav className="sidebar__menu"><DayList
-          days={state.days}
-          value={state.day}
-          onChange={(day) => setState({ ...state, day })}
-        /></nav>
+        <nav className="sidebar__menu">
+          <DayList
+            days={state.days}
+            value={state.day}
+            onChange={(day) => setState({ ...state, day })}
+          />
+        </nav>
         {/* <nav>
         </nav> */}
         <img
@@ -92,9 +93,17 @@ export default function Application(props) {
         {/* Replace this with the sidebar elements during the "Project Setup & Familiarity" activity. */}
       </section>
       <section className="schedule">
-        {dailyAppointments.map((appointment) => (
-          <Appointment key={appointment.id} {...appointment} />
-        ))}
+        {dailyAppointments.map((appointment) => {
+          const interview = getInterview(state, appointment.interview);
+          return (
+            <Appointment
+            key={appointment.id}
+            id={appointment.id}
+            time={appointment.time}
+            interview={interview}
+            />
+          );
+        })}
         {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
       </section>
     </main>
