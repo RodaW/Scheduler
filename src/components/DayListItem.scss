@@ -29,6 +29,12 @@
 
     &--full {
       opacity: $inactive-opacity;
+
+      &:hover {
+        background-color: #ee5253;
+        cursor: pointer;
+        color: $dark-background;
+      }
     }
   }
 }
